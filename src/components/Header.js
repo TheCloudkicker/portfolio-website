@@ -67,7 +67,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Header = () => {
+
+const Header = ({ open, toggleDrawer }) => {
     const classes = useStyles();
 
     return (
@@ -76,6 +77,7 @@ const Header = () => {
                 <Toolbar>
                     <IconButton
                         edge="start"
+                        onClick={toggleDrawer(!open)}
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"

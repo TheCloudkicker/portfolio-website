@@ -4,24 +4,27 @@ import Header from './components/Header'
 import Footer from './components/Footer'
 import { createTheme } from '@material-ui/core/styles'
 
-import React from 'react';
-import AppBar from '@material-ui/core/AppBar';
+import React, { useState } from 'react';
+import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
-import CameraIcon from '@material-ui/icons/PhotoCamera';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Grid from '@material-ui/core/Grid';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import Link from '@material-ui/core/Link';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import AlbumIcon from '@material-ui/icons/Album';
 
 
-
+import clsx from 'clsx';
 
 const darkTheme = createTheme({
   palette: {
@@ -60,19 +63,68 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(6),
   },
+  list: {
+    width: 250,
+  },
+  fullList: {
+    width: 'auto',
+  },
 }));
 
 const cards = [];
 
 function App() {
+
   const classes = useStyles();
+
+  const [open, isOpen] = useState(false)
+
+  const toggleDrawer = open => (event) => {
+    console.log("Clicked")
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    isOpen(open)
+
+  };
+
+  const list = (anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+      })}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {['Web Developer', 'Sound Engineer', 'Cloud Engineer', 'Music Producer'].map((text, index) => (
+          <ListItem button key={text}>
+            <ListItemIcon>{<AlbumIcon />}</ListItemIcon>
+            <ListItemText primary={text} />
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+    </div>
+  );
+  
+  
   return (
     <ThemeProvider theme={darkTheme}>
 
 
       <React.Fragment>
         <CssBaseline />
-        <Header />
+        <Drawer open={open} onClose={toggleDrawer(false)}>
+        {list('left')}
+      </Drawer>
+      
+
+        <Header open={open} toggleDrawer={toggleDrawer} />
+      
+      
         <main>
           {/* Hero unit */}
           <div className={classes.heroContent}>
